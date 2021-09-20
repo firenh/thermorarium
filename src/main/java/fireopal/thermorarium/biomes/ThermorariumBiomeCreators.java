@@ -3,6 +3,7 @@ package fireopal.thermorarium.biomes;
 import net.minecraft.world.biome.GenerationSettings;
 import fireopal.thermorarium.features.ThermorariumConfiguredFeatures;
 import fireopal.thermorarium.util.FireopalBiomeAPI_v1;
+import fireopal.thermorarium.util.FireopalBiomeAPI_v1.Spawns;
 import net.minecraft.client.sound.MusicType;
 import net.minecraft.entity.EntityType;
 import net.minecraft.particle.ParticleTypes;
@@ -23,7 +24,7 @@ import net.minecraft.world.gen.surfacebuilder.ConfiguredSurfaceBuilders;
 
 public class ThermorariumBiomeCreators {
     static SpawnSettings.SpawnEntry spawn(EntityType<?> type, int weight, int minGroupSize, int maxGroupSize) {
-        return FireopalBiomeAPI_v1.spawn(type, weight, minGroupSize, maxGroupSize);
+        return Spawns.spawn(type, weight, minGroupSize, maxGroupSize);
     }
 
     public static Biome createCrimonPlains() {
@@ -41,8 +42,8 @@ public class ThermorariumBiomeCreators {
             spawn(EntityType.STRIDER, 60, 1, 2)
         };
 
-        FireopalBiomeAPI_v1.addMonsters(spawnSettings, monsters);
-        FireopalBiomeAPI_v1.addCreatures(spawnSettings, creatures);
+        Spawns.monsters(spawnSettings, monsters);
+        Spawns.creatures(spawnSettings, creatures);
 
         //GenerationSettings
 
@@ -97,8 +98,8 @@ public class ThermorariumBiomeCreators {
             spawn(EntityType.STRIDER, 60, 1, 2)
         };
 
-        FireopalBiomeAPI_v1.addMonsters(spawnSettings, monsters);
-        FireopalBiomeAPI_v1.addCreatures(spawnSettings, creatures);
+        Spawns.monsters(spawnSettings, monsters);
+        Spawns.creatures(spawnSettings, creatures);
         spawnSettings.spawnCost(EntityType.ENDERMAN, 1.0D, 0.12D);
 
         //GenerationSettings

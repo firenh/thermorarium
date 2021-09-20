@@ -3,6 +3,7 @@ package fireopal.thermorarium.biomes;
 import net.minecraft.world.biome.GenerationSettings;
 import fireopal.thermorarium.features.ThermorariumConfiguredFeatures;
 import fireopal.thermorarium.util.FireopalBiomeAPI_v1;
+import fireopal.thermorarium.util.FireopalBiomeAPI_v1.Spawns;
 import net.minecraft.client.sound.MusicType;
 import net.minecraft.entity.EntityType;
 import net.minecraft.particle.ParticleTypes;
@@ -28,8 +29,8 @@ public class ThermorariumTemplateBiomeCreators {
 
         SpawnSettings.Builder spawnSettings = new SpawnSettings.Builder();
 
-        FireopalBiomeAPI_v1.addMonsters(spawnSettings, monsters);
-        FireopalBiomeAPI_v1.addCreatures(spawnSettings, creatures);
+        Spawns.monsters(spawnSettings, monsters);
+        Spawns.creatures(spawnSettings, creatures);
 
         //GenerationSettings
 
