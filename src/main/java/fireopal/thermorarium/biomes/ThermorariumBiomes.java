@@ -16,8 +16,8 @@ public class ThermorariumBiomes {
     }
 
     public static void init() {
-        register(ThermorariumBiomeKeys.CRIMSON_PLAINS, ThermorariumBiomeCreators.createCrimonPlains());
-        register(ThermorariumBiomeKeys.WARPED_PLAINS, ThermorariumBiomeCreators.createWarpedPlains());
+        register(ThermorariumBiomeKeys.CRIMSON_PLAINS, ThermorariumBiomeCreators.createNetherPlainsBiome(true));
+        register(ThermorariumBiomeKeys.WARPED_PLAINS, ThermorariumBiomeCreators.createNetherPlainsBiome(false));
 
         addBiomes();
     }
