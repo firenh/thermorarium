@@ -12,4 +12,6 @@ public class ThermorariumBiomeKeys {
 
     public static final RegistryKey<Biome> CRIMSON_PLAINS = register("crimson_plains");
     public static final RegistryKey<Biome> WARPED_PLAINS = register("warped_plains");
+    public static final RegistryKey<Biome> CRIMSON_MARSHLAND = register("crimson_marshland");
+    public static final RegistryKey<Biome> WARPED_MARSHLAND = register("warped_marshland");
 }

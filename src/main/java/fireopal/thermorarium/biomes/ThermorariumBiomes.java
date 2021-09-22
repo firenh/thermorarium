@@ -16,8 +16,10 @@ public class ThermorariumBiomes {
     }
 
     public static void init() {
-        register(ThermorariumBiomeKeys.CRIMSON_PLAINS, ThermorariumBiomeCreators.createNetherPlainsBiome(true));
-        register(ThermorariumBiomeKeys.WARPED_PLAINS, ThermorariumBiomeCreators.createNetherPlainsBiome(false));
+        register(ThermorariumBiomeKeys.CRIMSON_PLAINS, ThermorariumBiomeCreators.createNetherForestTypeBiome(true, false));
+        register(ThermorariumBiomeKeys.WARPED_PLAINS, ThermorariumBiomeCreators.createNetherForestTypeBiome(false, false));
+        register(ThermorariumBiomeKeys.CRIMSON_MARSHLAND, ThermorariumBiomeCreators.createNetherForestTypeBiome(true, true));
+        register(ThermorariumBiomeKeys.WARPED_MARSHLAND, ThermorariumBiomeCreators.createNetherForestTypeBiome(false, true));
 
         addBiomes();
     }
@@ -25,5 +27,8 @@ public class ThermorariumBiomes {
     private static void addBiomes() {
         add(ThermorariumBiomeKeys.CRIMSON_PLAINS, 0.0F, 0.4F, 0.0F, 0.5F, 0.3F);
         add(ThermorariumBiomeKeys.WARPED_PLAINS, 0.0F, 0.0F, 0.5F, 0.5F, 0.275F);
+
+        add(ThermorariumBiomeKeys.CRIMSON_MARSHLAND, 0.0F, 0.4F, 0.0F, -0.5F, 0.3F);
+        add(ThermorariumBiomeKeys.WARPED_MARSHLAND, 0.0F, 0.0F, 0.5F, -0.5F, 0.275F);
     }
 }

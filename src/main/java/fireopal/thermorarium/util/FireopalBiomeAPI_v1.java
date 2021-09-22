@@ -1,8 +1,15 @@
 package fireopal.thermorarium.util;
 
+import java.util.ArrayList;
+
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnGroup;
+import net.minecraft.sound.BiomeAdditionsSound;
+import net.minecraft.sound.BiomeMoodSound;
+import net.minecraft.sound.MusicSound;
+import net.minecraft.sound.SoundEvent;
 import net.minecraft.world.biome.Biome;
+import net.minecraft.world.biome.BiomeEffects;
 import net.minecraft.world.biome.GenerationSettings;
 import net.minecraft.world.biome.SpawnSettings;
 import net.minecraft.world.biome.SpawnSettings.SpawnEntry;
@@ -108,6 +115,12 @@ public class FireopalBiomeAPI_v1 {
             }
         }
 
+        public static void features(GenerationSettings.Builder generationSettings, GenerationStep.Feature generationStep, ArrayList<ConfiguredFeature<?, ?>> configuredFeatures) {
+            for (ConfiguredFeature<?, ?> c : configuredFeatures) {
+                generationSettings.feature(generationStep, c);
+            }
+        }
+
         //Adds structure features
 
         public static void structureFeatures(GenerationSettings.Builder generationSettings, ConfiguredStructureFeature<?, ?>... configuredStructureFeatures) {
@@ -175,5 +188,63 @@ public class FireopalBiomeAPI_v1 {
         public static void liquidCarver(GenerationSettings.Builder generationSettings, ConfiguredCarver<?>... configuredCarver) {
             carvers(generationSettings, GenerationStep.Carver.LIQUID, configuredCarver);
         }
-    } 
+    }
+    
+    public class Effects {
+        public static class BiomeSounds {
+            SoundEvent loopSound;
+            BiomeMoodSound moodSound;
+            BiomeAdditionsSound additionsSound;
+            MusicSound music;
+
+            public BiomeSounds(SoundEvent loopSound, BiomeMoodSound moodSound, BiomeAdditionsSound additionsSound, MusicSound music) {
+                this.loopSound = loopSound;
+                this.moodSound = moodSound;
+                this.additionsSound = additionsSound;
+                this.music = music;
+            }
+
+            public SoundEvent getLoopSound() {
+                return loopSound;
+            }
+
+            public BiomeMoodSound getMoodSound() {
+                return moodSound;
+            }
+
+            public BiomeAdditionsSound getAdditionsSound() {
+                return additionsSound;
+            }
+
+            public MusicSound getMusic() {
+                return music;
+            }
+        }
+
+        public static void addBiomeSounds(BiomeEffects.Builder biomeEffects, BiomeSounds biomeSounds) {
+            biomeEffects
+                .loopSound(biomeSounds.getLoopSound())
+                .moodSound(biomeSounds.getMoodSound())
+                .additionsSound(biomeSounds.getAdditionsSound())
+                .music(biomeSounds.getMusic());
+        }
+    }
+
+    public class Build {
+        public static void properties(Biome.Builder biome, float depth, float scale, float temperature, float downfall) {
+            biome
+                .depth(depth)
+                .scale(scale)
+                .temperature(temperature)
+                .downfall(downfall);
+        }
+
+        public static Biome finalize(Biome.Builder biome, SpawnSettings.Builder spawnSettings, GenerationSettings.Builder generationSettings, BiomeEffects.Builder biomeEffects) {
+            return biome
+                .effects(biomeEffects.build())
+                .spawnSettings(spawnSettings.build())
+                .generationSettings(generationSettings.build())
+                .build();
+        }
+    }
 }

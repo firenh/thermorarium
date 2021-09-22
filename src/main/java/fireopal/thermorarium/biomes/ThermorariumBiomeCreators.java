@@ -6,8 +6,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 import fireopal.thermorarium.features.ThermorariumConfiguredFeatures;
+import fireopal.thermorarium.util.FireopalBiomeAPI_v1.Build;
+import fireopal.thermorarium.util.FireopalBiomeAPI_v1.Effects;
 import fireopal.thermorarium.util.FireopalBiomeAPI_v1.Generation;
 import fireopal.thermorarium.util.FireopalBiomeAPI_v1.Spawns;
+import fireopal.thermorarium.util.FireopalBiomeAPI_v1.Effects.BiomeSounds;
 import net.minecraft.client.sound.MusicType;
 import net.minecraft.entity.EntityType;
 import net.minecraft.particle.ParticleTypes;
@@ -20,6 +23,7 @@ import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.BiomeEffects;
 import net.minecraft.world.biome.BiomeParticleConfig;
 import net.minecraft.world.biome.SpawnSettings;
+import net.minecraft.world.gen.GenerationStep;
 import net.minecraft.world.gen.feature.ConfiguredFeature;
 import net.minecraft.world.gen.feature.ConfiguredFeatures;
 import net.minecraft.world.gen.feature.DefaultBiomeFeatures;
@@ -50,17 +54,16 @@ public class ThermorariumBiomeCreators {
         return Spawns.spawn(type, weight, minGroupSize, maxGroupSize);
     }
 
-    public static Biome createNetherPlainsBiome(boolean crimson) {
+    public static Biome createNetherForestTypeBiome(boolean crimson, boolean marsh) {
         ConfiguredSurfaceBuilder<?> surfaceBuilder;
 
         int fogColor = 0;
         BiomeParticleConfig particles;
-        SoundEvent ambientLoop;
-        BiomeMoodSound ambientMood;
-        BiomeAdditionsSound ambientAdditions;
-        MusicSound music;
+        BiomeSounds biomeSounds;
 
+        ArrayList<ConfiguredFeature<?, ?>> surfaceStructureFeatures = new ArrayList<ConfiguredFeature<?, ?>>();
         ArrayList<ConfiguredFeature<?, ?>> vegetalFeatures = new ArrayList<ConfiguredFeature<?, ?>>();
+        ArrayList<ConfiguredFeature<?, ?>> undergroundDecorFeatures = new ArrayList<ConfiguredFeature<?, ?>>();
 
         SpawnSettings.Builder spawnSettings = new SpawnSettings.Builder();
 
@@ -76,16 +79,28 @@ public class ThermorariumBiomeCreators {
             fogColor = crimsonFogColor;
             particles = crimsonParticles;
 
-            ambientLoop = ambientCrimsonLoop;
-            ambientMood = ambientCrimsonMood;
-            ambientAdditions = ambientCrimsonAdditions;
-            music = crimsonMusic;
+            biomeSounds = new BiomeSounds(ambientCrimsonLoop, ambientCrimsonMood, ambientCrimsonAdditions, crimsonMusic);
 
             Collections.addAll(vegetalFeatures, 
                 ConfiguredFeatures.WEEPING_VINES,
-                ThermorariumConfiguredFeatures.SPARSE_CRIMSON_FUNGI,
                 ConfiguredFeatures.CRIMSON_FOREST_VEGETATION
             );
+
+            if (marsh) {
+                Collections.addAll(vegetalFeatures,
+                    ConfiguredFeatures.CRIMSON_FUNGI
+                );
+                Collections.addAll(undergroundDecorFeatures,
+                    ThermorariumConfiguredFeatures.MAGMA_TO_CRIMSON,
+                    ThermorariumConfiguredFeatures.MAGMA_TO_LAVA
+                );
+                Collections.addAll(surfaceStructureFeatures,
+                    ConfiguredFeatures.SMALL_BASALT_COLUMNS,
+                    ThermorariumConfiguredFeatures.CRIMSON_MARSH_DELTA
+                );
+            } else {
+                vegetalFeatures.add(ThermorariumConfiguredFeatures.SPARSE_CRIMSON_FUNGI);
+            }
         } else {
             Spawns.monsters(spawnSettings, 
                 spawn(EntityType.ENDERMAN, 1, 4, 4)
@@ -99,15 +114,27 @@ public class ThermorariumBiomeCreators {
             fogColor = warpedFogColor;
             particles = warpedParticles;
 
-            ambientLoop = ambientWarpedLoop;
-            ambientMood = ambientWarpedMood;
-            ambientAdditions = ambientWarpedAdditions;
-            music = warpedMusic;
+            biomeSounds = new BiomeSounds(ambientWarpedLoop, ambientWarpedMood, ambientWarpedAdditions, warpedMusic);
 
-            Collections.addAll(vegetalFeatures, 
-            ThermorariumConfiguredFeatures.SPARSE_WARPED_FUNGI,
+            Collections.addAll(vegetalFeatures,
                 ConfiguredFeatures.WARPED_FOREST_VEGETATION
             );
+
+            if (marsh) {
+                Collections.addAll(vegetalFeatures,
+                    ConfiguredFeatures.WARPED_FUNGI
+                );
+                Collections.addAll(undergroundDecorFeatures,
+                    ThermorariumConfiguredFeatures.MAGMA_TO_WARPED,
+                    ThermorariumConfiguredFeatures.MAGMA_TO_LAVA
+                );
+                Collections.addAll(surfaceStructureFeatures,
+                    ConfiguredFeatures.SMALL_BASALT_COLUMNS,
+                    ThermorariumConfiguredFeatures.WARPED_MARSH_DELTA
+                );
+            } else {
+                vegetalFeatures.add(ThermorariumConfiguredFeatures.SPARSE_WARPED_FUNGI);
+            }
         }
 
         Spawns.creatures(spawnSettings,
@@ -118,34 +145,29 @@ public class ThermorariumBiomeCreators {
 
         GenerationSettings.Builder generationSettings = (new GenerationSettings.Builder())
             .surfaceBuilder(surfaceBuilder);
-        ThermorariumDefaultGenerationBuilders.addDefaultNetherCarvers(generationSettings);
-        ThermorariumDefaultGenerationBuilders.addDefaultNetherStructures(generationSettings);
-        DefaultBiomeFeatures.addDefaultMushrooms(generationSettings);
-        ThermorariumDefaultGenerationBuilders.addDefaultNetherForestFeatures(generationSettings);
 
-        ConfiguredFeature<?, ?>[] vegetalFeatures2 = new ConfiguredFeature<?, ?>[vegetalFeatures.size()];
-        vegetalFeatures2 = vegetalFeatures.toArray(vegetalFeatures2);
+        Generation.features(generationSettings, GenerationStep.Feature.SURFACE_STRUCTURES, surfaceStructureFeatures);
+        Generation.features(generationSettings, GenerationStep.Feature.UNDERGROUND_DECORATION, undergroundDecorFeatures);
+        Generation.features(generationSettings, GenerationStep.Feature.VEGETAL_DECORATION, vegetalFeatures);
+
+        ThermorariumDefaultGenerationBuilders.addNetherForestStuff(generationSettings);
         
-        Generation.vegetalDecorationFeatures(generationSettings, vegetalFeatures2);
+        
 
-        return (new Biome.Builder())
-            .precipitation(Biome.Precipitation.NONE)
-            .category(Biome.Category.NETHER)
-            .depth(0.1F)
-            .scale(0.2F)
-            .temperature(2.0F)
-            .downfall(0.0F)
-            .effects((new BiomeEffects.Builder())
-                .waterColor(4159204)
-                .waterFogColor(329011)
-                .fogColor(fogColor)
-                .skyColor(fogColor)
-                .particleConfig(particles)
-                .loopSound(ambientLoop)
-                .moodSound(ambientMood)
-                .additionsSound(ambientAdditions)
-                .music(music)
-                .build())
-            .spawnSettings(spawnSettings.build()).generationSettings(generationSettings.build()).build();
+        BiomeEffects.Builder biomeEffects = ((new BiomeEffects.Builder())
+            .waterColor(4159204)
+            .waterFogColor(329011)
+            .fogColor(fogColor)
+            .skyColor(fogColor)
+            .particleConfig(particles));
+        Effects.addBiomeSounds(biomeEffects, biomeSounds);
+
+        Biome.Builder biome = (new Biome.Builder())
+        .precipitation(Biome.Precipitation.NONE)
+        .category(Biome.Category.NETHER);
+        Build.properties(biome, 0.1F, 0.2F, 2.0F, 0.0F);
+        Build.finalize(biome, spawnSettings, generationSettings, biomeEffects);
+
+        return biome.build();
     }
 }

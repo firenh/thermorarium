@@ -9,7 +9,7 @@ import net.minecraft.world.gen.feature.ConfiguredStructureFeatures;
 import net.minecraft.world.gen.feature.DefaultBiomeFeatures;
 
 public class ThermorariumDefaultGenerationBuilders {
-    public static void addDefaultNetherForestFeatures(GenerationSettings.Builder generationSettings) {
+    public static void addDefaultUndergroundDecorNetherForest(GenerationSettings.Builder generationSettings) {
         Generation.undergroundDecorationFeatures(generationSettings,
             ConfiguredFeatures.SPRING_OPEN,
             ConfiguredFeatures.PATCH_FIRE,
@@ -24,6 +24,7 @@ public class ThermorariumDefaultGenerationBuilders {
         );
 
         DefaultBiomeFeatures.addNetherMineables(generationSettings);
+        DefaultBiomeFeatures.addDefaultMushrooms(generationSettings);
     }
 
     public static void addDefaultNetherCarvers(GenerationSettings.Builder generationSettings) {
@@ -42,5 +43,11 @@ public class ThermorariumDefaultGenerationBuilders {
             ConfiguredStructureFeatures.RUINED_PORTAL_NETHER,
             ConfiguredStructureFeatures.FORTRESS
         );
+    }
+
+    public static void addNetherForestStuff(GenerationSettings.Builder generationSettings) {
+        addDefaultNetherCarvers(generationSettings);
+        addDefaultUndergroundDecorNetherForest(generationSettings);
+        addDefaultNetherStructures(generationSettings);
     }
 }
