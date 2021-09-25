@@ -24,6 +24,20 @@ public class FireopalBiomeAPI_v1 {
         biome.spawnSettings(spawnSettings.build()).generationSettings(generationSettings.build()).build();
     }
 
+    public static class ObjectSwap<O> {
+        O trueObject;
+        O falseObject;
+
+        public ObjectSwap(O trueObject, O falseObject) {
+            this.trueObject = trueObject;
+            this.falseObject = falseObject;
+        }
+
+        public O get(boolean swap) {
+            return (swap) ? this.trueObject : this.falseObject;
+        }
+    } 
+
     //SpawnSettings
 
     public class Spawns {
