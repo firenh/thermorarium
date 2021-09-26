@@ -1,45 +1,18 @@
-/*package fireopal.thermorarium.features.config;
+package fireopal.thermorarium.features.config;
 
-import com.mojang.datafixers.util.Function3;
-import com.mojang.datafixers.util.Function4;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.intprovider.IntProvider;
 import net.minecraft.world.gen.feature.FeatureConfig;
 
-public class GroundPeppersFeatureConfig implements FeatureConfig {
-   public static final Codec<Object> CODEC = RecordCodecBuilder.create((instance) -> {
-      return instance.group(BlockState.CODEC.fieldOf("target").forGetter((groundPeppersFeatureConfig) -> {
-         return groundPeppersFeatureConfig.target;
-      }), BlockState.CODEC.fieldOf("blockstate").forGetter((groundPeppersFeatureConfig) -> {
-         return groundPeppersFeatureConfig.blockstate;
-      }), IntProvider.createValidatingCodec(0, 16).fieldOf("size").forGetter((groundPeppersFeatureConfig) -> {
-         return groundPeppersFeatureConfig.size;
-      })).apply(instance, (Function3<BlockState, BlockState, IntProvider, R>)(GroundPeppersFeatureConfig::new));
-   });
-
-   private BlockState target;
-   private BlockState blockstate;
-   private IntProvider size;
-
-   public GroundPeppersFeatureConfig(Object target, Object blockstate, Object size, Object rimSize) {
-      this.target = (BlockState)target;
-      this.blockstate = (BlockState)blockstate;
-      this.size = (IntProvider)size;
-   }
-
-   public BlockState getTarget() {
-      return this.target;
-   }
-
-   public BlockState getBlockstate() {
-      return this.blockstate;
-   }
-
-   public IntProvider getSize() {
-      return this.size;
-   }
+public record GroundPeppersFeatureConfig(IntProvider size, IntProvider chance, BlockState target, BlockState blockState, IntProvider requiresContainment) implements FeatureConfig {
+   public static final Codec<GroundPeppersFeatureConfig> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+      IntProvider.VALUE_CODEC.fieldOf("size").forGetter(GroundPeppersFeatureConfig::size),
+      IntProvider.VALUE_CODEC.fieldOf("chance").forGetter(GroundPeppersFeatureConfig::chance),
+      BlockState.CODEC.fieldOf("target").forGetter(GroundPeppersFeatureConfig::target),
+      BlockState.CODEC.fieldOf("blockState").forGetter(GroundPeppersFeatureConfig::blockState),
+      IntProvider.VALUE_CODEC.fieldOf("requiresContainment").forGetter(GroundPeppersFeatureConfig::requiresContainment)
+   ).apply(instance, instance.stable(GroundPeppersFeatureConfig::new)));
 }
-
-*/

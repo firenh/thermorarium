@@ -98,7 +98,7 @@ public class ThermorariumBiomeCreators {
     public static Biome createNetherForestTypeBiome(boolean crimson, boolean marsh) {
         ArrayList<ConfiguredFeature<?, ?>> surfaceStructureFeatures = new ArrayList<ConfiguredFeature<?, ?>>();
         ArrayList<ConfiguredFeature<?, ?>> vegetalFeatures = new ArrayList<ConfiguredFeature<?, ?>>();
-        ArrayList<ConfiguredFeature<?, ?>> strongholdFeatures = new ArrayList<ConfiguredFeature<?, ?>>();
+        ArrayList<ConfiguredFeature<?, ?>> undergroundDecorFeatures = new ArrayList<ConfiguredFeature<?, ?>>();
 
         SpawnSettings.Builder spawnSettings = new SpawnSettings.Builder();
 
@@ -108,7 +108,7 @@ public class ThermorariumBiomeCreators {
             Collections.addAll(vegetalFeatures,
                 hugeFungi.get(crimson)
             );
-            Collections.addAll(strongholdFeatures,
+            Collections.addAll(undergroundDecorFeatures,
                 magmaToNyliumPeppers.get(crimson),
                 ThermorariumConfiguredFeatures.MAGMA_TO_LAVA
             );
@@ -135,6 +135,72 @@ public class ThermorariumBiomeCreators {
             .surfaceBuilder(wartForestSurface.get(crimson));
 
         Generation.features(generationSettings, GenerationStep.Feature.SURFACE_STRUCTURES, surfaceStructureFeatures);
+        Generation.features(generationSettings, GenerationStep.Feature.UNDERGROUND_DECORATION, undergroundDecorFeatures);
+        Generation.features(generationSettings, GenerationStep.Feature.VEGETAL_DECORATION, vegetalFeatures);
+
+        ThermorariumDefaultGenerationBuilders.addNetherForestStuff(generationSettings);
+        
+
+        int fogColor = wartForestSkyColor.get(crimson);
+
+        BiomeEffects.Builder biomeEffects = ((new BiomeEffects.Builder())
+            .waterColor(4159204)
+            .waterFogColor(329011)
+            .fogColor(fogColor)
+            .skyColor(fogColor)
+            .particleConfig(wartForestParticles.get(crimson)));
+        Effects.addBiomeSounds(biomeEffects, wartForestSounds.get(crimson));
+
+        Biome.Builder biome = (new Biome.Builder())
+        .precipitation(Biome.Precipitation.NONE)
+        .category(Biome.Category.NETHER);
+        Build.properties(biome, 0.1F, 0.2F, 2.0F, 0.0F);
+        Build.finalize(biome, spawnSettings, generationSettings, biomeEffects);
+
+        return biome.build();
+    }
+
+    /*
+    
+    public static Biome createSoulSandValleyTypeBiome(boolean lush) {
+        ArrayList<ConfiguredFeature<?, ?>> surfaceStructureFeatures = new ArrayList<ConfiguredFeature<?, ?>>();
+        ArrayList<ConfiguredFeature<?, ?>> vegetalFeatures = new ArrayList<ConfiguredFeature<?, ?>>();
+
+        SpawnSettings.Builder spawnSettings = new SpawnSettings.Builder();
+
+        wartForestSpawns(spawnSettings, lush);
+
+        if (lush) {
+            Collections.addAll(vegetalFeatures,
+                sparseHugeFungi.get(true)
+            );
+            Collections.addAll(strongholdFeatures,
+                magmaToNyliumPeppers.get(crimson),
+                ThermorariumConfiguredFeatures.MAGMA_TO_LAVA
+            );
+            Collections.addAll(surfaceStructureFeatures,
+                ConfiguredFeatures.SMALL_BASALT_COLUMNS,
+                marshDelta.get(crimson)
+            );
+        } else {
+            vegetalFeatures.add(sparseHugeFungi.get(crimson));
+        }
+
+        Collections.addAll(vegetalFeatures,
+            wartForestVegetation.get(crimson),
+            wartForestVines.get(crimson)
+        );
+
+        Spawns.creatures(spawnSettings,
+            spawn(EntityType.STRIDER, 60, 1, 2)
+        );
+
+        //GenerationSettings
+
+        GenerationSettings.Builder generationSettings = (new GenerationSetti ngs.Builder())
+            .surfaceBuilder(ConfiguredSurfaceBuilders.SOUL_SAND_VALLEY);
+
+        Generation.features(generationSettings, GenerationStep.Feature.SURFACE_STRUCTURES, surfaceStructureFeatures);
         Generation.features(generationSettings, GenerationStep.Feature.STRONGHOLDS, strongholdFeatures);
         Generation.features(generationSettings, GenerationStep.Feature.VEGETAL_DECORATION, vegetalFeatures);
 
@@ -159,4 +225,7 @@ public class ThermorariumBiomeCreators {
 
         return biome.build();
     }
+
+    */
 }
+
